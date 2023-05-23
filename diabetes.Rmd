@@ -1,0 +1,83 @@
+---
+title: "Untitled"
+author: "Group5"
+date: '2022-05-06'
+output: html_document
+---
+
+```{r}
+#data<-read.table( http://odds.cs.stonybrook.edu/pima-indians-diabetes-dataset/?msclkid=6806ba7ccd7b11ec96c33cd019092a33)
+library(R.matlab)
+diabetes <- readMat('C:/Spring2022/STAT5311/project/pima.mat')
+diabetesX<- data.frame(diabetes$X)
+diabetesX
+colnames(diabetesX)<- c("Pregnancies", "Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI", "DiabetesPedigreeFunction", "Age")
+diabetesX
+
+```
+
+
+
+```{r}
+diabetesX
+
+
+```
+
+Euclidian distance
+```{r}
+d<-dist(diabetesX)
+hatX=cmdscale(d, k = 5, eig = TRUE)$points # \hat{X} solution
+hatX
+cmdscale(d, k = 9, eig = TRUE)$eig
+
+
+
+```
+```{r}
+diabetes.loc2 <- cmdscale(d, k=2,eig=TRUE)
+x <- -diabetes.loc2$points[,1]
+y <- -diabetes.loc2$points[,2] # reflect so North is at the top
+plot(x, y, xlab = "Coordinate 1", ylab = "Coordinate 2", xlim = range(x)*1.2, ylim = range(y)*1.2, type = "n")
+text(x, y, labels = colnames(diabetesX), cex = 0.7)
+
+```
+
+##Graphical exploration
+```{r}
+diabetes1 <-diabetesX[5:8]
+library(MASS)
+ir <- rbind(diabetes1[ , , 1], diabetes1[ , , 2], diabetes1[ , , 3])
+parcoord(log(ir)[ , c(3, 4,1,2)], # Order the axes
+col = c(rep("red", 50), rep("green", 50), rep("blue", 50)))
+
+
+```
+##plots
+```{r}
+plot(diabetesX$Age,diabetesX$BMI)
+plot(diabetesX$Pregnancies,diabetesX$BMI)
+plot(diabetesX$Insulin,diabetesX$Age)
+
+```
+Canonical analysis
+
+```{r}
+diabetesX
+pima1=c(1,2,3,4)
+pima2=c(5,6,7,8)
+diabetesX[1, pima1] ; diabetesX[1, pima2]
+cca=cancor(diabetesX[,pima1], diabetesX[,pima2])
+cca
+
+
+```
+
+
+```{r}
+cca$cor
+cca$xcoef
+```
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
